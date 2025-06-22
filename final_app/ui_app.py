@@ -1,71 +1,76 @@
+import tkinter as tk
+
 import customtkinter as ctk
 
-# 初始化
-ctk.set_appearance_mode("System")
-ctk.set_default_color_theme("blue")
-
+# 建立主視窗
 app = ctk.CTk()
-app.title("Notion 合併工具")
-app.geometry("600x600")
+app.geometry("720x480")
+app.title("Notion 自動合併工具")
 
-# ========== UI 元件 ==========
+# 儲存組合 ID 與來源 ID 的變數
+combination_id_var = ctk.StringVar()  # 儲存 combination database ID
 
-# 標題
-title_label = ctk.CTkLabel(app, text="🔗 合併 Notion 資料庫", font=("Helvetica", 20))
-title_label.pack(pady=20)
+# 儲存 target ID 變數的列表（新增時擴充）
+target_vars = []
 
-# Combination database ID
-combi_id_var = ctk.StringVar()
-combi_entry = ctk.CTkEntry(app, placeholder_text="輸入合併資料庫 C ID", textvariable=combi_id_var, width=400)
-combi_entry.pack(pady=10)
+# ====== Combination ID 輸入欄位（單獨一行） ======
+ctk.CTkLabel(app, text="Combination Database ID:").pack(pady=(20, 5))
+combination_entry = ctk.CTkEntry(app, textvariable=combination_id_var, width=400, placeholder_text="請輸入 Target ID")
+combination_entry.pack(pady=(0, 10))
 
-# Target database frame
-target_frame = ctk.CTkFrame(app)
-target_frame.pack(pady=10)
-target_entries = []
+# ====== Target ID 輸入欄位區域（固定高度，只顯示一個，有滾動條） ======
+target_frame_container = ctk.CTkFrame(app, height=60)
+target_frame_container.pack(pady=(0, 5), padx=20, fill="x")
+
+canvas = tk.Canvas(target_frame_container, borderwidth=0, background="#2b2b2b", height=50)
+scrollbar = ctk.CTkScrollbar(target_frame_container, orientation="vertical", command=canvas.yview)
+canvas.configure(yscrollcommand=scrollbar.set)
+
+scrollbar.pack(side="right", fill="y")
+canvas.pack(side="left", fill="both", expand=True)
+
+inner_frame = ctk.CTkFrame(canvas)
+canvas.create_window((0, 0), window=inner_frame, anchor="nw")
+inner_frame.bind("<Configure>", lambda event: canvas.configure(scrollregion=canvas.bbox("all")))
 
 
-# ✅ 合併按鈕功能
-def on_merge_click():
-    combi_id = combi_id_var.get()
-    target_ids = [v.get() for v in target_entries if v.get().strip()]
-    print(f"✅ 合併：{target_ids} → {combi_id}")
-    # TODO: 呼叫你的 Notion 合併邏輯
+# ====== Target ID 清單展開與新增 ======
+def add_target_entry():
+    var = ctk.StringVar()
+    entry = ctk.CTkEntry(inner_frame, textvariable=var, width=400)
+    entry.pack(pady=2)
+    target_vars.append(var)
+    check_enable_merge_button()
 
 
-# ✅ 是否啟用按鈕的邏輯
-def check_enable_merge_button(*args):
-    combi_ok = combi_id_var.get().strip() != ""
-    target_ok = any(v.get().strip() != "" for v in target_entries)
-    if combi_ok and target_ok:
+# 啟用/停用合併按鈕的檢查
+def check_enable_merge_button():
+    if combination_id_var.get().strip() and any(v.get().strip() for v in target_vars):
         merge_button.configure(state="normal")
     else:
         merge_button.configure(state="disabled")
 
 
-# ✅ 新增 target 輸入欄位
-def add_target_entry():
-    target_var = ctk.StringVar()
-    entry = ctk.CTkEntry(target_frame, placeholder_text="輸入來源資料庫 ID", textvariable=target_var, width=400)
-    entry.pack(pady=5)
-    target_entries.append(target_var)
-    target_var.trace_add("write", check_enable_merge_button)
-    check_enable_merge_button()
+# 合併按鈕事件
+def on_merge_click():
+    combination_id = combination_id_var.get().strip()
+    target_ids = [v.get().strip() for v in target_vars if v.get().strip()]
+    print("Combination ID:", combination_id)
+    print("Target IDs:", target_ids)
 
 
-# 合併按鈕（一開始是 disabled）
-merge_button = ctk.CTkButton(app, text="🚀 開始合併", command=on_merge_click, state="disabled")
-merge_button.pack(pady=20)
+# ====== 控制按鈕（新增 target 與合併） ======
+button_frame = ctk.CTkFrame(app)
+button_frame.pack(pady=(10, 5))
 
-# 新增 target ID 按鈕
-add_target_button = ctk.CTkButton(app, text="➕ 新增來源資料庫", command=add_target_entry)
-add_target_button.pack(pady=5)
+add_button = ctk.CTkButton(button_frame, text="➕ 新增 Target ID", command=add_target_entry)
+add_button.pack(side="left", padx=10)
 
-# 初始化加一筆 target
-add_target_entry()
+merge_button = ctk.CTkButton(app, text="🚀 開始合併", state="disabled", command=on_merge_click)
+merge_button.pack(pady=(10, 10))
 
-# 監聽 combi id 的輸入
-combi_id_var.trace_add("write", check_enable_merge_button)
+# 每次輸入 Combination ID 時檢查按鈕啟用狀態
+combination_id_var.trace_add("write", lambda *args: check_enable_merge_button())
 
-# ========== 執行 UI ==========
+# 主事件迴圈啟動
 app.mainloop()
