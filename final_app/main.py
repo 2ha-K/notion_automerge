@@ -7,7 +7,7 @@ load_dotenv()  # Load environment variables from .env file
 from notion_utils.relate_databases_to_one.relate_databases_add_new_target_database import *
 from notion_utils.relate_databases_to_one.relate_databases_format import *
 from notion_utils.relate_databases_to_one.relate_databases_to_one_update import *
-from notion_utils.log import log_error, log_error_with_traceback
+from notion_utils.log import log_error, log_error_with_traceback, write_log_header
 
 
 def main():
@@ -85,8 +85,8 @@ def main():
 
 if __name__ == "__main__":
     try:
+        write_log_header()
         start = time.time()
-
         main()
         end = time.time()
         log_print_green(f"Total runtime：{end - start:.4f} seconds.")
