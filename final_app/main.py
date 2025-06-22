@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 from dotenv import load_dotenv
@@ -8,6 +9,7 @@ from notion_utils.relate_databases_to_one.relate_databases_add_new_target_databa
 from notion_utils.relate_databases_to_one.relate_databases_format import *
 from notion_utils.relate_databases_to_one.relate_databases_to_one_update import *
 from notion_utils.log import log_error, log_error_with_traceback, write_log_header
+from notion_utils.internet_check import check_internet_connection
 
 
 def main():
@@ -85,6 +87,9 @@ def main():
 
 if __name__ == "__main__":
     try:
+        if not check_internet_connection():
+            print("No Internet connection.")
+            sys.exit(1)
         write_log_header()
         start = time.time()
         main()
