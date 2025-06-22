@@ -32,6 +32,7 @@ def main():
 
     # === Part 1: Ensure standard fields ===
     try:
+        start1 = time.time()
         # Update any mismatched relation field names in combination database
         print("Starting relation sync process...")
         sync_relation_names_with_database_titles(combination_database_C_id)
@@ -48,6 +49,8 @@ def main():
             except RuntimeError as re:
                 log_error("Failed to add new relation property to combination database.", re)
         log_print_green(f"All relation fields successfully added to database {combination_database_C_id}")
+        end1 = time.time()
+        log_print_green(f"Setting runtime：{end1 - start1:.4f} seconds.")
     except Exception as re:
         log_error("Part 1: Ensure standard fields failed.")
         log_error_with_traceback(re)
@@ -55,6 +58,7 @@ def main():
     # === Part 2: Sync relation field names ===
 
     try:
+        start2 = time.time()
         # Make sure relation field names match the corresponding database titles
         print("Re-syncing relation names to ensure accuracy...")
         sync_relation_names_with_database_titles(combination_database_C_id)
@@ -72,6 +76,8 @@ def main():
         print("Updating combination database with all target data...")
         update_all_target_database_to_combi(target_database_list, combination_database_C_id)
         log_print_green("✅ Merge process complete.")
+        end2 = time.time()
+        log_print_green(f"Sync runtime：{end2 - start2:.4f} seconds.")
     except Exception as ve:
         log_error("Part 2: Sync relation field names failed.")
         log_error_with_traceback(ve)
@@ -83,7 +89,7 @@ if __name__ == "__main__":
 
         main()
         end = time.time()
-        print(f"Total runtime：{end - start:.4f} seconds.")
+        log_print_green(f"Total runtime：{end - start:.4f} seconds.")
     except KeyboardInterrupt:
         log_error("Program terminated by user (KeyboardInterrupt).")
     except Exception as e:
