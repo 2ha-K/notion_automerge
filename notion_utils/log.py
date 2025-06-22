@@ -42,11 +42,11 @@ def log_error(message, exception=None):
 
     # Print main error message with red color
     _write_to_file(ERROR_LOG_PATH, f"[{timestamp}] [ERROR] {message}")
-    print(f"[{timestamp}] [ERROR] {message}")
+    print(f"{RED}[{timestamp}{RESET}] [ERROR] {message}")
     if exception:
         # Print exception details if provided
         _write_to_file(ERROR_LOG_PATH, f"[{timestamp}] [DETAIL] {exception}")
-        print(f"[{timestamp}] [DETAIL] {exception}")
+        print(f"{RED}[{timestamp}{RESET}] [DETAIL] {exception}")
 
 
 def log_error_with_traceback(exception):
