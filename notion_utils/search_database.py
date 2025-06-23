@@ -78,3 +78,12 @@ def get_target_page_dict(page_id):
         return response
     except Exception as e:
         raise RuntimeError(f"Failed to get page '{page_id}'") from e
+
+
+def is_valid_database(database_id):
+    try:
+        notion.databases.retrieve(database_id=database_id)
+        return True
+    except Exception:
+        print(f"[!] Invalid database ID: {database_id}")
+        return False

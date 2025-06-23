@@ -60,7 +60,7 @@ def is_page_id_exist(page_id):
             return True
         return False
     except Exception as e:
-        print(str(e))
+        print(f"[!] Invalid page ID: {page_id}")
         return False
 
 
