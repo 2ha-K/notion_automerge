@@ -12,19 +12,23 @@ from notion_utils.log import log_error, log_error_with_traceback, write_log_head
 from notion_utils.internet_check import check_internet_connection
 
 
-def ensure_standard_fields(combination_database_id, target_database_list):
+def ensure_standard_fields(combination_database_id, target_database_list, update_callback):
     try:
         start1 = time.time()
+        total_callback_first_half = len(target_database_list) + 1
+        count = 0
         # Update any mismatched relation field names in combination database
         print("Starting relation sync process...")
         sync_relation_names_with_database_titles(combination_database_id)
-
+        update_callback(1 / total_callback_first_half / 2)
         print("Adding relation fields...(Make sure all target database titles are unique!)")
 
         for target_database in target_database_list:
             # Add relation fields if they do not already exist
             try:
+                count += 1
                 add_new_relate_database_property(target_database, combination_database_id)
+                update_callback((1 + count) / total_callback_first_half / 2)
             except ValueError as ve:
                 log_error("Failed to add new relation property to combination database.", ve)
                 continue
@@ -33,36 +37,41 @@ def ensure_standard_fields(combination_database_id, target_database_list):
         log_print_green(f"All relation fields successfully added to database {combination_database_id}")
         end1 = time.time()
         log_print_green(f"Setting runtime：{end1 - start1:.4f} seconds.")
+        update_callback(50)
     except Exception as re:
         log_error("Part 1: Ensure standard fields failed.")
         log_error_with_traceback(re)
+        raise Exception("Ensure standard fields failed.")
 
 
-def sync_relation_field_names(combination_database_id, target_database_list):
+def sync_relation_field_names(combination_database_id, target_database_list, update_callback):
     try:
         start2 = time.time()
         # Make sure relation field names match the corresponding database titles
         print("Re-syncing relation names to ensure accuracy...")
         sync_relation_names_with_database_titles(combination_database_id)
+        update_callback(50 + 12.5)
 
         # Validate that each page has at most one valid relation and no duplicate names
         print("Validating combination database structure...")
         check_combination_database_pages_format(combination_database_id)
-
+        update_callback(75)
         # Ensure required fields like Name, Database Address, Created/Edited Time exist
         print("Ensuring required dynamic fields exist...")
         update_standard_database_property(combination_database_id)
         log_print_green("Field check complete. Renamed fields will be preserved and new ones created if needed.")
-
+        update_callback(75 + 12.5)
         # Merge all pages from target databases into the combination database
         print("Updating combination database with all target data...")
         update_all_target_database_to_combi(target_database_list, combination_database_id)
         log_print_green("✅ Merge process complete.")
         end2 = time.time()
         log_print_green(f"Sync runtime：{end2 - start2:.4f} seconds.")
+        update_callback(100)
     except Exception as ve:
         log_error("Part 2: Sync relation field names failed.")
         log_error_with_traceback(ve)
+        raise Exception("Sync relation field names failed.")
 
 
 def main():

@@ -16,7 +16,7 @@ from notion_utils.search_database import is_valid_database
 app = CTk()
 app.title("Notion Auto Merge Tool")
 app.resizable(False, False)
-app.geometry("720x430")
+app.geometry("720x445")
 
 main_frame = CTkFrame(app)
 main_frame.pack(fill="both", expand=True, padx=20, pady=(10, 0))
@@ -92,29 +92,32 @@ def on_click_sync():
             if is_valid_database(combination_database_id):
                 if len(target_database_list) > 0:
                     combination_entry.configure(state="disabled")
-                    target_ID_list_combobox.configure(state="disabled")
+                    target_ID_list_combobox.configure(state="disabled", text_color="white")
                     merge_button.configure(state="disabled")
                     target_add_button.configure(state="disabled")
                     target_delete_button.configure(state="disabled")
                     status_check_button.configure(state="disabled")
                     try:
+                        progress.set(0.0)
                         error_label.configure(
                             text="SYNC Started... Please do not close the program, or the database may be corrupted.",
                             text_color="gray")
-                        progress.start()
+                        # progress.start()
                         ensure_standard_fields(combination_database_id=combination_database_id,
-                                               target_database_list=target_database_list)
+                                               target_database_list=target_database_list,
+                                               update_callback=update_progress)
                         sync_relation_field_names(combination_database_id=combination_database_id,
-                                                  target_database_list=target_database_list)
-                        progress.stop()
+                                                  target_database_list=target_database_list,
+                                                  update_callback=update_progress)
+                        # progress.stop()
                         error_label.configure(text="SYNC Completed", text_color="green")
                         combination_entry.configure(state="normal")
                         target_ID_list_combobox.configure(state="normal")
                         merge_button.configure(state="normal")
                         target_add_button.configure(state="normal")
                         status_check_button.configure(state="normal")
-                    except:
-                        error_label.configure(text="SYNC Fail", text_color="red")
+                    except Exception as e:
+                        error_label.configure(text=e, text_color="red")
                         combination_entry.configure(state="red")
                         target_ID_list_combobox.configure(state="red")
                         merge_button.configure(state="normal")
@@ -161,7 +164,8 @@ target_ID_list_combobox.set("")
 target_add_button = CTkButton(master=form_frame, text="Add", width=10, command=on_click_add)
 target_delete_button = CTkButton(master=form_frame, text="Delete", width=10, command=on_click_delete, state="disabled")
 
-error_label = CTkLabel(master=form_frame, text="", text_color="red", fg_color="#4d4d4d", corner_radius=4)
+error_label = CTkLabel(master=form_frame, text="(・ω・)I'm just a little bot waiting for orders!(・ω・)",
+                       fg_color="#4d4d4d", corner_radius=4)
 
 merge_button = CTkButton(master=form_frame, text="Sync & Merge Databases", width=10, command=run_sync_in_thread,
                          corner_radius=6, )
@@ -187,8 +191,9 @@ target_delete_button.pack(side="left")
 error_label.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="ew")
 error_label.configure(anchor="center", justify="center")
 
-progress = CTkProgressBar(master=form_frame, width=300)
+progress = CTkProgressBar(master=form_frame, width=450, height=13)
 progress.grid(row=3, column=0, columnspan=4, pady=10)
+progress.set(0.0)
 
 merge_button.grid(row=4, column=0, columnspan=4, pady=10)
 
