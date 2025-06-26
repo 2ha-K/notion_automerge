@@ -108,4 +108,4 @@ def delete_page(page_id):
         )
         return response
     except Exception as e:
-        raise RuntimeError(f"Failed to delete (archive) page: {page_id}")
+        raise RuntimeError(f"Failed to delete (archive) page: ")

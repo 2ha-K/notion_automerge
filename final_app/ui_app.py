@@ -1,6 +1,8 @@
 """
 UNDO:
-Notion token 的處理
+exe化
+修改error raise的方式 最後的main或ui能抓才對
+把ui改error label 傳進去直到log然後顯示資訊
 """
 import re
 import threading
@@ -12,6 +14,7 @@ from final_app.main import ensure_standard_fields, sync_relation_field_names
 
 load_dotenv()
 from notion_utils.search_database import is_valid_database
+from notion_utils.internet_check import check_internet_connection
 
 app = CTk()
 app.title("Notion Auto Merge Tool")
@@ -258,5 +261,47 @@ instruction_text = CTkLabel(
     text_color="black"
 )
 instruction_text.pack(padx=10, pady=6, anchor="w")
+
+no_internet = False
+
+
+def check_and_update_network_status():
+    global no_internet
+    if check_internet_connection() and no_internet:
+        # 網路恢復，開啟所有元件
+        error_label.configure(
+            text="✅ Internet connected. You may proceed.",
+            text_color="green"
+        )
+        combination_entry.configure(state="normal")
+        target_ID_list_combobox.configure(state="normal")
+        target_add_button.configure(state="normal")
+        target_delete_button.configure(state="normal")
+        status_check_button.configure(state="normal")
+        merge_button.configure(state="normal")
+        progress.set(100)
+        flash_progressbar_color(progressbar=progress, color="green")
+        no_internet = False
+    elif not check_internet_connection():
+        # 網路仍中斷
+        error_label.configure(
+            text="[!] No internet connection. Please connect to the internet.",
+            text_color="red"
+        )
+        combination_entry.configure(state="disabled")
+        target_ID_list_combobox.configure(state="disabled")
+        target_add_button.configure(state="disabled")
+        target_delete_button.configure(state="disabled")
+        status_check_button.configure(state="disabled")
+        merge_button.configure(state="disabled")
+        progress.set(100)
+        progress.configure(progress_color="red")
+        no_internet = True
+
+    # 每 10 秒自動重檢查一次
+    app.after(10000, check_and_update_network_status)
+
+
+check_and_update_network_status()
 
 app.mainloop()
