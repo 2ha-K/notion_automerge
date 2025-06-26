@@ -25,15 +25,9 @@ def ensure_standard_fields(combination_database_id, target_database_list, update
 
         for target_database in target_database_list:
             # Add relation fields if they do not already exist
-            try:
-                count += 1
-                add_new_relate_database_property(target_database, combination_database_id)
-                update_callback((1 + count) / total_callback_first_half / 2)
-            except ValueError as ve:
-                log_error("Failed to add new relation property to combination database.", ve)
-                continue
-            except RuntimeError as re:
-                log_error("Failed to add new relation property to combination database.", re)
+            count += 1
+            add_new_relate_database_property(target_database, combination_database_id)
+            update_callback((1 + count) / total_callback_first_half / 2)
         log_print_green(f"All relation fields successfully added to database {combination_database_id}")
         end1 = time.time()
         log_print_green(f"Setting runtime：{end1 - start1:.4f} seconds.")
@@ -71,7 +65,7 @@ def sync_relation_field_names(combination_database_id, target_database_list, upd
     except Exception as ve:
         log_error("Part 2: Sync relation field names failed.")
         log_error_with_traceback(ve)
-        raise Exception("Sync relation field names failed.")
+        raise Exception("Sync relation field names failed.") from ve
 
 
 def main():

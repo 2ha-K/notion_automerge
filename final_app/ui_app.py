@@ -45,18 +45,24 @@ def on_click_add():
                 target_ID_list_combobox.configure(values=target_database_list)
                 error_label.configure(text="New target database id have been added successfully.", text_color="green")
                 target_ID_list_combobox.set("")
-                target_ID_list_combobox.configure(text_color="red")
+                target_ID_list_combobox.configure(text_color="white")
+                flash_progressbar_color(progress, color="#00FF7F")
+
             else:
                 error_label.configure(text="[!] Invalid ID", text_color="red")
                 target_ID_list_combobox.configure(text_color="red")
+                flash_progressbar_color(progress)
         else:
             print("[!] Invalid input format")
             error_label.configure(text="[!] Invalid input format (Only Accept Alphabet and Number).", text_color="red")
             target_ID_list_combobox.configure(text_color="red")
+            flash_progressbar_color(progress)
     else:
         print("[!] Empty or Repeated Input")
         error_label.configure(text="[!] Empty or Repeated Input", text_color="red")
-        target_ID_list_combobox.configure(text_color="red")
+        if new_target:
+            target_ID_list_combobox.configure(text_color="red")
+        flash_progressbar_color(progress)
 
 
 # Decide when delete function can be valid
@@ -76,6 +82,7 @@ def on_click_delete():
     target_database_list.remove(select_target)
     target_ID_list_combobox.set("")
     target_ID_list_combobox.configure(values=target_database_list)
+    flash_progressbar_color(progress, color="#00FF7F")
     error_label.configure(text="Selected target database id have been deleted successfully.", text_color="green")
 
 
@@ -98,6 +105,7 @@ def on_click_sync():
                     target_delete_button.configure(state="disabled")
                     status_check_button.configure(state="disabled")
                     try:
+                        progress.configure(progress_color="#1f6aa5")
                         progress.set(0.0)
                         error_label.configure(
                             text="SYNC Started... Please do not close the program, or the database may be corrupted.",
@@ -110,6 +118,7 @@ def on_click_sync():
                                                   target_database_list=target_database_list,
                                                   update_callback=update_progress)
                         # progress.stop()
+                        progress.configure(progress_color="#00FF7F")
                         error_label.configure(text="SYNC Completed", text_color="green")
                         combination_entry.configure(state="normal")
                         target_ID_list_combobox.configure(state="normal")
@@ -117,6 +126,8 @@ def on_click_sync():
                         target_add_button.configure(state="normal")
                         status_check_button.configure(state="normal")
                     except Exception as e:
+                        flash_progressbar_color(progress, color="red")
+                        progress.configure(progress_color="red")
                         error_label.configure(text=e, text_color="red")
                         combination_entry.configure(state="red")
                         target_ID_list_combobox.configure(state="red")
@@ -125,16 +136,20 @@ def on_click_sync():
                         status_check_button.configure(state="normal")
                 else:
                     print("[!] At least one target database id is required")
+                    flash_progressbar_color(progress, color="red")
                     error_label.configure(text="[!] At least one target database id is required", text_color="red")
 
             else:
+                flash_progressbar_color(progress, color="red")
                 error_label.configure(text="[!] Invalid Combination ID", text_color="red")
         else:
             print("[!] Invalid Combination Database ID Format")
+            flash_progressbar_color(progress, color="red")
             error_label.configure(text="[!] Invalid Combination Database ID Format (Only Accept Alphabet and Number).",
                                   text_color="red")
     else:
         print("[!] Not Allowed Empty Combination Database ID")
+        flash_progressbar_color(progress, color="red")
         error_label.configure(text="[!] Not Allowed Empty Combination Database ID", text_color="red")
 
 
@@ -142,13 +157,32 @@ def is_valid_combination_database():
     id = combination_entry.get().strip().lower()
     if id and is_valid_database(id):
         error_label.configure(text="Combination database id is exist", text_color="green")
+        flash_progressbar_color(progress, color="#00FF7F")
     else:
         error_label.configure(text="[!] Invalid Combination Database ID", text_color="red")
+        flash_progressbar_color(progress, color="red")
 
 
 def update_progress(percent):
     progress.set(percent / 100)  # 例如 30% 就傳入 30
     app.update_idletasks()  # 確保即時更新 UI
+
+
+def flash_progressbar_color(progressbar, color="red", count=3, delay=300):
+    progress.set(100)
+    print("變色了")
+
+    def toggle(i=0):
+        if i >= count * 2:
+            progressbar.configure(progress_color="#3B8ED0")  # 恢復預設色
+            return
+        if i % 2 == 0:
+            progressbar.configure(progress_color=color)
+        else:
+            progressbar.configure(progress_color="#3B8ED0")  # 原本藍色
+        progressbar.after(delay, lambda: toggle(i + 1))
+
+    toggle()
 
 
 combination_label = CTkLabel(master=form_frame, text="Combination Database ID:")
@@ -191,9 +225,9 @@ target_delete_button.pack(side="left")
 error_label.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="ew")
 error_label.configure(anchor="center", justify="center")
 
-progress = CTkProgressBar(master=form_frame, width=450, height=13)
+progress = CTkProgressBar(master=form_frame, width=450, height=13, progress_color="#1f6aa5")
 progress.grid(row=3, column=0, columnspan=4, pady=10)
-progress.set(0.0)
+progress.set(100)
 
 merge_button.grid(row=4, column=0, columnspan=4, pady=10)
 
