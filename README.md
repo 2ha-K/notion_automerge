@@ -34,6 +34,12 @@ With the GUI, you can:
 
 ---
 
+## 📽 Demo Video
+
+[![Watch the demo](https://img.youtube.com/vi/Wv_3Vw6b-vk/0.jpg)](https://youtu.be/Wv_3Vw6b-vk)
+
+---
+
 ## Project Structure
 
 ```
