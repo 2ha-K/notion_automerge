@@ -15,6 +15,7 @@ from final_app.main import ensure_standard_fields, sync_relation_field_names
 load_dotenv()
 from notion_utils.search_database import is_valid_database
 from notion_utils.internet_check import check_internet_connection
+from notion_utils.log import write_log_header
 
 app = CTk()
 app.title("Notion Auto Merge Tool")
@@ -113,6 +114,7 @@ def on_click_sync():
                         error_label.configure(
                             text="SYNC Started... Please do not close the program, or the database may be corrupted.",
                             text_color="gray")
+                        write_log_header()
                         # progress.start()
                         ensure_standard_fields(combination_database_id=combination_database_id,
                                                target_database_list=target_database_list,
