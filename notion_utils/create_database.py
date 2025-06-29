@@ -1,3 +1,22 @@
+"""
+notion_utils/create_database.py
+
+Purpose:
+    Provides a utility function to programmatically create a new Notion database under a given parent page.
+    This is commonly used in tools that auto-generate merged or combined databases during setup.
+
+Features:
+    - Uses Notion API to create a database with customizable `title` and `rich_text` properties
+    - Designed to support dynamic database generation from the GUI or sync logic
+
+Used in:
+    - Phase 6+: GUI-based one-click creation of combination databases
+    - Setup process for merged database pipelines
+
+Function:
+    - create_new_database(): Create a new database with specified structure under a Notion page
+"""
+
 from notion_utils.client import get_notion_client
 
 # Initialize Notion client

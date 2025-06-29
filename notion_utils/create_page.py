@@ -1,3 +1,28 @@
+"""
+notion_utils/create_page.py
+
+Purpose:
+    Provides utility functions to create new Notion pages in various contexts:
+    - Inside a specific database (with title and tag fields)
+    - As a sub-page under an existing page
+    - As a new root-level workspace page
+
+Features:
+    - Supports creating pages with custom title and rich_text fields
+    - Handles flexible parent types: database, page, workspace
+    - Safe error handling with optional return values
+
+Used in:
+    - Phase 2–5: Page creation during merging, tagging, or database setup
+    - GUI tools for manual or scripted page generation
+    - Testing or seeding data into Notion
+
+Functions:
+    - create_new_page(): Add a page to a database with title + tag
+    - create_new_page_page(): Create a sub-page under an existing page
+    - create_new_page_root(): Create a top-level page in the workspace
+"""
+
 from notion_utils.client import get_notion_client
 
 # Initialize the Notion client

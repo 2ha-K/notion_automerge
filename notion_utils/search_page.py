@@ -1,3 +1,31 @@
+"""
+notion_utils/search_page.py
+
+Purpose:
+    Provides utility functions to retrieve, inspect, and extract metadata from individual Notion pages.
+    These functions enable consistent access to page-level attributes such as titles, timestamps, and parent IDs.
+
+Features:
+    - Retrieve full page objects via Notion API (with caching support)
+    - Extract title from known property or auto-detect from schema
+    - Read creation and last-edited timestamps (ISO 8601 format)
+    - Check existence of pages and resolve parent database IDs
+
+Used in:
+    - Phase 4–5: During sync, page mapping, and metadata injection
+    - GUI/database integration tools that rely on human-readable titles or metadata
+    - Internal sync engines that rely on relational integrity
+
+Functions:
+    - get_target_page_title(): Get title from specified title property
+    - get_page_title(): Auto-detect the title property and extract the value
+    - get_target_page_dict(): Fetch the entire page structure
+    - is_page_id_exist(): Check if a page ID is valid
+    - get_page_create_time(): Return creation timestamp
+    - get_page_last_edited_time(): Return last modified timestamp
+    - get_parent_of_page_id(): Return parent database ID of a page
+"""
+
 from notion_utils.cache import get_page
 from notion_utils.client import get_notion_client
 from notion_utils.log import log_error

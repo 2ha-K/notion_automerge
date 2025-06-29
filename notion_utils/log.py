@@ -1,3 +1,28 @@
+"""
+notion_utils/log.py
+
+Purpose:
+    Provides structured logging utilities for console output and file recording.
+    Supports color-coded console logs and persistent log files for both info and error messages.
+
+Features:
+    - Colored console output (green: success, yellow: info/warning, red: error)
+    - Log file separation: `info.log` and `error.log`
+    - Optional exception handling and traceback output
+    - Utility to insert header markers for each run session
+
+Used in:
+    - All modules for consistent feedback (merge progress, sync steps, warnings, exceptions)
+    - GUI and CLI tools that require structured logging and runtime status
+
+Functions:
+    - log_print_green(): Print success message in green
+    - log_print_yellow(): Print informational/warning message in yellow
+    - log_error(): Log an error with optional exception
+    - log_error_with_traceback(): Full traceback output for debugging
+    - write_log_header(): Marks a new run in log files
+"""
+
 import os
 import traceback
 from datetime import datetime

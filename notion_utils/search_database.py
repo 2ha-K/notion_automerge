@@ -1,3 +1,32 @@
+"""
+notion_utils/search_database.py
+
+Purpose:
+    Provides utility functions to query, validate, and extract metadata from Notion databases and pages.
+    These functions are primarily used to support dynamic schema resolution, validation, and data retrieval
+    across the entire database merging pipeline.
+
+Features:
+    - Fetch full database or page objects
+    - Extract display titles from Notion databases and pages
+    - Dynamically resolve the name of the 'title' property in any database
+    - Check for the existence of specific properties
+    - Validate database ID existence via safe access
+
+Used in:
+    - Phase 2–5: During conditional merge, schema validation, and page generation
+    - Metadata syncing, GUI inspection, and error handling
+
+Functions:
+    - get_target_database_dict(): Return full database schema
+    - get_target_database_title(): Extract the display title of a database
+    - get_target_database_title_property_name(): Find the name of the 'title' property field
+    - property_exists(): Check if a property exists in a database
+    - get_target_page_title(): Get plain-text title of a page
+    - get_target_page_dict(): Return full page metadata
+    - is_valid_database(): Validate a database ID (returns True/False)
+"""
+
 from notion_utils.cache import get_page, get_database
 from notion_utils.client import get_notion_client
 

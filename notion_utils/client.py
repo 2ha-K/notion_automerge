@@ -1,4 +1,23 @@
-# notion_utils/client.py
+"""
+notion_utils/client.py
+
+Purpose:
+    Provides a centralized, authenticated Notion client instance using environment configuration.
+    This module ensures consistent usage of the Notion API token across the entire project.
+
+Features:
+    - Loads environment variables via `dotenv`
+    - Validates presence of `NOTION_TOKEN`
+    - Exposes a `get_notion_client()` function to return a shared Notion Client
+
+Used in:
+    - All modules that require Notion API access (read/write)
+    - Phase 1–5, caching, syncing, metadata operations
+
+Function:
+    - get_notion_client(): Returns an authenticated Notion Client object using the token from `.env`
+"""
+
 import os
 
 from dotenv import load_dotenv

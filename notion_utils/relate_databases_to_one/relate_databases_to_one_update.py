@@ -1,3 +1,33 @@
+"""
+notion_utils/update_all_target_database_to_combi.py
+
+Purpose:
+    This module acts as the core controller to synchronize and integrate multiple source Notion databases
+    into a centralized combination database. It handles syncing page content, relations, metadata,
+    and removes orphaned pages. All major actions are multi-threaded for performance.
+
+Key Features:
+    - Merge multiple target databases into one central database.
+    - Deduplicate entries via relation checking.
+    - Auto-update metadata: creation time, last edited time, source database, and page title.
+    - Remove pages with no valid source reference (orphan cleanup).
+    - Multithreaded for high performance across all page operations.
+
+Used in:
+    - Phase 5: Conditional Merge
+    - Final Integration Layer (sync engine)
+    - GUI-triggered synchronization
+
+Core Functions:
+    - update_all_target_database_to_combi(): Main entrypoint to sync all target DBs into the combination DB.
+    - update_single_target_database_to_combi(): Syncs one target DB with relation-based deduplication.
+    - update_page_to_combi(): Adds or skips a page based on whether it already exists.
+    - delete_no_relation_pages(): Deletes pages that lack source linkage.
+    - update_all_pages_properties(): Copies metadata from source pages into merged records.
+    - update_page_properties(): Updates a single page's metadata (title, timestamps, origin).
+    - Helper functions like add_new_page(), is_page_id_in_combi_relation_id() assist in structure & validation.
+"""
+
 from asyncio import as_completed
 from concurrent.futures import ThreadPoolExecutor, as_completed
 

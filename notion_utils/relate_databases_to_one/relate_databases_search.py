@@ -1,3 +1,24 @@
+"""
+notion_utils/relate_databases_to_one/relate_databases_search.py
+
+Purpose:
+    Contains utility functions to inspect and validate relation properties
+    between a combination database and its target databases.
+
+    Specifically:
+    - Check if a relation to a given target database already exists.
+    - Normalize UUIDs for consistent comparison (Notion returns hyphenated UUIDs).
+
+Used in:
+    - Phase 5: Conditional Merge
+    - During validation when adding new relation fields
+    - Called by GUI or automation logic to prevent duplicates
+
+Functions:
+    - property_relation_id_exists(): Check if a relation to a target DB exists in the schema.
+    - normalize_uuid(): Remove hyphens from UUIDs to normalize format for comparison.
+"""
+
 from notion_utils.client import get_notion_client
 
 notion = get_notion_client()

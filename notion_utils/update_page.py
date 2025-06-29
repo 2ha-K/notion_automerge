@@ -1,3 +1,26 @@
+"""
+notion_utils/update_page.py
+
+Purpose:
+    Provides utility functions to update or archive (soft-delete) individual Notion pages.
+    Supports multiple property types such as title, rich_text, checkbox, number, and select.
+
+Features:
+    - Update specific page properties with type-safe formatting
+    - Built-in format generator for each supported Notion property type
+    - Archive pages using Notion's soft-delete mechanism
+    - Handles type validation and graceful error reporting
+
+Used in:
+    - Phase 4–5: When updating synced metadata or cleaning up pages
+    - GUI batch updates or manual property editing
+    - Background cleanup and status tagging
+
+Functions:
+    - update_page_property(): Update a property on a given page with flexible type support
+    - delete_page(): Archive a page using Notion's soft-deletion pattern
+"""
+
 from notion_utils.cache import get_page
 from notion_utils.client import get_notion_client
 

@@ -1,3 +1,19 @@
+"""
+notion_utils/network/check_internet_connection.py
+
+Purpose:
+    Provides a simple utility to check whether an internet connection is available.
+    It attempts to connect to a well-known DNS server (default: 8.8.8.8) over TCP port 53.
+
+Use Cases:
+    - Before making API requests to Notion or other cloud services
+    - To provide user-friendly error handling when offline
+    - As a lightweight pre-flight check in CLI or GUI applications
+
+Function:
+    - check_internet_connection(): Returns True if an outbound connection can be established; otherwise False
+"""
+
 import socket
 
 

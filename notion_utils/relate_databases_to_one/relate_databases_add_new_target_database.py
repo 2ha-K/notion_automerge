@@ -1,3 +1,20 @@
+"""
+notion_utils/relate_databases_to_one/add_new_relation.py
+
+Purpose:
+    This module defines a utility function to dynamically add a new relation property
+    to a Notion "combination" database. The relation links to a specified target database.
+
+    It ensures:
+    - No duplicate relations are added.
+    - No naming conflicts with existing properties.
+    - Relation field name is synchronized with the target database's title.
+
+Used in:
+    - Phase 5: Conditional Merge
+    - GUI: When user selects a new database to relate to the combination DB
+"""
+
 from notion_utils.log import log_print_yellow
 from notion_utils.relate_databases_to_one.relate_databases_search import get_notion_client, property_relation_id_exists
 from notion_utils.search_database import get_target_database_title

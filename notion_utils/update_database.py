@@ -1,3 +1,29 @@
+"""
+notion_utils/update_database.py
+
+Purpose:
+    Provides utility functions for modifying Notion database schemas, including:
+    - Renaming properties
+    - Changing property types
+    - Adding new properties safely (with name conflict resolution)
+
+Features:
+    - Safe property name updates with conflict avoidance
+    - Automatic type update only when necessary
+    - Add property with rollback support if name collision occurs
+    - Built-in checks using `property_exists` and current schema inspection
+
+Used in:
+    - Phase 3–5: To prepare combination database schema before syncing
+    - GUI schema validation or pre-sync formatting
+    - Standardizing structure across merged databases
+
+Functions:
+    - update_database_property_name(): Rename an existing property
+    - update_database_property_type(): Change the type of a property
+    - add_new_property(): Add new property with collision-safe fallback
+"""
+
 from notion_utils.cache import get_database
 from notion_utils.client import get_notion_client
 from notion_utils.search_database import property_exists

@@ -1,4 +1,29 @@
-# cache.py
+"""
+notion_utils/cache.py
+
+Purpose:
+    Implements simple in-memory caching for Notion pages and databases to reduce redundant API calls.
+    This improves performance for read-heavy operations such as:
+    - Page property lookups
+    - Database schema validations
+    - Metadata extraction for syncing
+
+Features:
+    - Optional cache toggle (`use_cache=True`) for each call
+    - Individual release functions for fine-grained control
+    - Global cache clearing for reset scenarios (e.g., full sync)
+
+Used in:
+    - Phase 4–5: During batch processing and metadata updates
+    - All modules that repeatedly access the same pages/databases
+
+Functions:
+    - get_page(): Fetch a page, with optional caching
+    - get_database(): Fetch a database, with optional caching
+    - release_page(): Remove one page from cache
+    - release_database(): Remove one database from cache
+    - clear_all_cache(): Clear everything from memory
+"""
 
 from notion_utils.client import get_notion_client
 

@@ -1,3 +1,24 @@
+"""
+notion_utils/update_database_schema.py
+
+Purpose:
+    Provides functions to standardize and validate the schema and structure of a Notion "combination" database.
+    These utilities ensure that:
+    - Required fields (Name, Database Location, Created Time, Last Edited Time) exist and are correctly typed.
+    - All relation field names match their corresponding source database titles.
+    - Pages follow strict format rules to prevent ambiguous or conflicting relations.
+
+Used in:
+    - Phase 5: Conditional Merge
+    - GUI validation before running synchronization
+
+Functions:
+    - update_standard_database_property(): Ensures standard fields exist and are typed correctly.
+    - sync_relation_names_with_database_titles(): Renames relation fields to match source database titles.
+    - check_combination_database_pages_format(): Validates page relation constraints (1:1).
+    - rename_title_to_name(): Renames the title field to 'Name' if necessary.
+"""
+
 from notion_utils.log import log_error
 from notion_utils.log import log_print_green, log_print_yellow
 from notion_utils.search_database import get_target_database_title
