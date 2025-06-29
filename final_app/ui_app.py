@@ -33,9 +33,8 @@ main_frame.grid_rowconfigure(1, weight=0)
 main_frame.grid_columnconfigure(0, weight=1)
 
 # List for collect target database ids
-target_database_list_test = ["205b82c9b09480a79deaec0b8c3a6369", "206b82c9b09480fe862def4512afcb78",
-                             "206b82c9b09480e9b8d5e5bdfef9b9cc"]
-target_database_list = target_database_list_test
+
+target_database_list = []
 
 
 def on_click_add():
@@ -95,7 +94,7 @@ def run_sync_in_thread():
 
 
 def on_click_sync():
-    combination_database_id = "206b82c9b094809bbec9c31069f10050"  # combination_entry.get().strip().lower()
+    combination_database_id = combination_entry.get().strip().lower()
     # First, check id not empty
     if combination_database_id:
         # Second, use API to check is the database id valid or not (more time)
