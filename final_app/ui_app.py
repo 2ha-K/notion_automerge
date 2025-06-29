@@ -1,8 +1,8 @@
 """
 UNDO:
-exe化
-修改error raise的方式 最後的main或ui能抓才對
-把ui改error label 傳進去直到log然後顯示資訊
+Raise more useful error to user.
+Show the detail of what information is operating.
+Set total time on time bar
 """
 import re
 import threading
@@ -131,7 +131,7 @@ def on_click_sync():
                     except Exception as e:
                         flash_progressbar_color(progress, color="red")
                         progress.configure(progress_color="red")
-                        error_label.configure(text=e, text_color="red")
+                        error_label.configure(text=f"[!] Error: {e}, please try again.", text_color="red")
                         combination_entry.configure(state="red")
                         target_ID_list_combobox.configure(state="red")
                         merge_button.configure(state="normal")
@@ -214,11 +214,11 @@ status_check_button.grid(row=0, column=2, padx=5, pady=5, sticky="w")
 target_label.grid(row=1, column=0, padx=10, pady=5, sticky="e")
 target_ID_list_combobox.grid(row=1, column=1, padx=5, pady=5, sticky="w")
 button_width = 67
-# 建立按鈕群組框架
+# Build the group for buttoms
 button_group_frame = CTkFrame(form_frame, fg_color="transparent")
 button_group_frame.grid(row=1, column=2, columnspan=2, padx=5, pady=5, sticky="w")
 
-# 將 Add / Delete 放入群組內
+# Put the add /delete button in a group so they can become easier with same size
 target_add_button = CTkButton(master=button_group_frame, text="Add", width=button_width, command=on_click_add)
 target_add_button.pack(side="left", padx=(0, 5))
 target_delete_button = CTkButton(master=button_group_frame, text="Delete", width=button_width, command=on_click_delete,
@@ -236,7 +236,6 @@ merge_button.grid(row=4, column=0, columnspan=4, pady=10)
 
 combo_var.trace_add("write", lambda *args: on_select_to_valid())
 
-# ============ Instruction Section ============
 instruction_frame = CTkFrame(master=main_frame, fg_color="#f0f0f0", corner_radius=8)
 instruction_frame.grid(row=1, column=0, sticky="ew", padx=10, pady=(0, 10))
 
@@ -268,7 +267,7 @@ no_internet = False
 def check_and_update_network_status():
     global no_internet
     if check_internet_connection() and no_internet:
-        # 網路恢復，開啟所有元件
+        # if the internet becomes reconnect after the internet disconnected once
         error_label.configure(
             text="✅ Internet connected. You may proceed.",
             text_color="green"
@@ -283,7 +282,7 @@ def check_and_update_network_status():
         flash_progressbar_color(progressbar=progress, color="green")
         no_internet = False
     elif not check_internet_connection():
-        # 網路仍中斷
+        # if internet still disconnected
         error_label.configure(
             text="[!] No internet connection. Please connect to the internet.",
             text_color="red"
@@ -298,7 +297,7 @@ def check_and_update_network_status():
         progress.configure(progress_color="red")
         no_internet = True
 
-    # 每 10 秒自動重檢查一次
+    # Check every 10 sec
     app.after(10000, check_and_update_network_status)
 
 

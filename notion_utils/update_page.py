@@ -80,7 +80,7 @@ def update_page_property(page_id, property_name, new_value, property_type):
         )
         return response
     except Exception as e:
-        raise RuntimeError(f"Failed to update page property '{property_name}' ({property_type})")
+        raise RuntimeError(f"Failed to update page property '{property_name}' ({property_type})") from e
 
 
 def delete_page(page_id):
@@ -108,4 +108,4 @@ def delete_page(page_id):
         )
         return response
     except Exception as e:
-        raise RuntimeError(f"Failed to delete (archive) page: ")
+        raise RuntimeError(f"Failed to delete (archive) page: ") from e

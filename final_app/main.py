@@ -65,7 +65,7 @@ def sync_relation_field_names(combination_database_id, target_database_list, upd
     except Exception as ve:
         log_error("Part 2: Sync relation field names failed.")
         log_error_with_traceback(ve)
-        raise Exception("Sync relation field names failed.") from ve
+        raise RuntimeError(f"Sync relation field names failed.") from ve
 
 
 def main():

@@ -69,6 +69,7 @@ def update_single_target_database_to_combi(target_database_id, combination_datab
         log_print_green(f"Database '{target_database_title}' merged.")
     except Exception as e:
         log_error(f"Error full merging database {target_database_id}.", e)
+        raise
 
 
 def update_page_to_combi(page_id, combination_database_id, target_database_title, target_database_id):
@@ -96,6 +97,7 @@ def update_page_to_combi(page_id, combination_database_id, target_database_title
 
     except RuntimeError as e:
         log_error(f"Failed to update page {page_id}.", e)
+        raise RuntimeError(f"Failed to update page {page_id}.") from e
 
 
 def get_page_id_list(database_id):
@@ -260,7 +262,7 @@ def delete_no_relation_pages(combination_database_id, relation_property_name_lis
 
 
     except Exception as e:
-        log_error("Failed to delete unlinked pages.", e)
+        raise RuntimeError(f"Failed to delete all unlinked pages.") from e
 
 
 def update_all_pages_properties(combination_database_id, relation_property_name_list):
@@ -307,7 +309,7 @@ def update_all_pages_properties(combination_database_id, relation_property_name_
                 future.result()
 
     except Exception as e:
-        log_error("Failed to update evey pages properties.", e)
+        raise RuntimeError("Failed to update page properties.", e)
 
 
 def update_page_properties(page_id, create_time, update_time, location, title):
